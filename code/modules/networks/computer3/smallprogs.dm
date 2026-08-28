@@ -416,7 +416,7 @@ File Commands<br>
 file_status - View status of loaded file.<br>
 file_send - Transmit loaded file.<br>
 file_print - Print contents of file.<br>
-file_load - Load file from local disk.
+file_load - Load file from local disk.<br>
 file_save - Save file to local disk."}
 			src.print_text(help_message)
 			return
