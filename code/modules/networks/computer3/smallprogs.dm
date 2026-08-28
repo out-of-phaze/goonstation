@@ -416,6 +416,7 @@ File Commands<br>
 file_status - View status of loaded file.<br>
 file_send - Transmit loaded file.<br>
 file_print - Print contents of file.<br>
+file_list - List non-copy-protected files on local disk.<br>
 file_load - Load file from local disk.<br>
 file_save - Save file to local disk."}
 			src.print_text(help_message)
@@ -604,6 +605,18 @@ file_save - Save file to local disk."}
 					src.peripheral_command("transmit", termsignal, "\ref[pnet_card]")
 					src.print_text("Connection Closed.")
 					src.disconnect_wait = -1
+
+			if ("file_list")
+				var/list/file_list = list()
+				// FROG not respect puny DWAINE access permissions...!!!
+				// but we'll throw a bone and hide things starting with _ anyway
+				for (var/datum/computer/held_file as anything in src.holding_folder.contents)
+					if (dd_hasprefix(held_file.name, "_"))
+						continue
+					if (held_file?.dont_copy)
+						continue
+					file_list += held_file.name
+				src.print_text("Files available: [jointext(file_list, ", ")]")
 
 			if ("file_load")
 				var/toLoadName = "temp"

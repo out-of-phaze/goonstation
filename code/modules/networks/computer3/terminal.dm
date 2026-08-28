@@ -48,6 +48,7 @@ disconnect - Disconnect from current device.<br>
 file_status - View status of loaded file.<br>
 file_send - Transmit loaded file.<br>
 file_print - Print contents of file.<br>
+file_list - List non-copy-protected files on local disk.<br>
 file_load - Load file from local disk.<br>
 file_save - Save file to local disk."}
 			src.print_text(help_message)
@@ -261,6 +262,22 @@ file_save - Save file to local disk."}
 				src.master.temp = "<b>File Contents:</b><br>"
 				src.print_text(src.temp_file:data)
 */
+			if ("file_list")
+				var/list/file_list = list()
+				// TermOS not respect puny DWAINE access permissions...!!!
+				// but we'll throw a bone and hide things starting with _ anyway
+				for (var/obj/item/disk/data/drive in src.master.contents)
+					if (drive == src.holder)
+						continue
+
+					for (var/datum/computer/held_file as anything in drive.contents)
+						if (dd_hasprefix(held_file.name, "_"))
+							continue
+						if (held_file.dont_copy)
+							continue
+						file_list += held_file.name
+				src.print_text("Files available: [jointext(file_list, ", ")]")
+
 			if("file_load")
 				var/toLoadName = "temp"
 				if (command_list.len)
